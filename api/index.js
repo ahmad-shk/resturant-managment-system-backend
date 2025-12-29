@@ -1,6 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors'); // 1. Isay add karein
+const cors = require('cors');
 const connectDB = require('../configs/db');
 const productRoutes = require('../routes/productRoutes');
 
@@ -9,14 +9,17 @@ connectDB();
 
 const app = express();
 
-// 2. CORS ko yahan configure karein
+// 1. CORS Configuration (Sahi hai)
 app.use(cors({
-  origin: '*', // Production mein yahan apna frontend URL likhein
+  origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json());
+// 2. IMPORTANT: JSON limit ko barhayein (413 error fix karne ke liye)
+// Default 1mb hoti hai, isay 10mb ya 50mb kar dein
+app.use(express.json({ limit: '10mb' })); 
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Routes
 app.use('/api/products', productRoutes);
