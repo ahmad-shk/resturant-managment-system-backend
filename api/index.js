@@ -1,12 +1,21 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors'); // 1. Isay add karein
 const connectDB = require('../configs/db');
 const productRoutes = require('../routes/productRoutes');
 
 dotenv.config();
-connectDB(); // Database connect karein
+connectDB();
 
 const app = express();
+
+// 2. CORS ko yahan configure karein
+app.use(cors({
+  origin: '*', // Production mein yahan apna frontend URL likhein
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 // Routes
